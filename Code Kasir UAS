@@ -1,0 +1,95 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <fstream>
+
+using namespace std;
+
+int main() {
+    cout << "##  Program C++ Aplikasi Kasir Kelompok Cucak Ijo  ##" << endl;
+    cout << "===================================================== " << endl;
+    cout << endl;
+
+    const int MAX_BARANG = 10;
+    string namaBarang[MAX_BARANG];
+    long hargaBarang[MAX_BARANG];
+    int jumlahBarang[MAX_BARANG];
+    int jumlahTotalBarang;
+    long totalHarga = 0;
+    long jumlahBayar = 0;
+
+    cout << "# Selamat datang di Mini Market Cucak Ijo #" << endl;
+    cout << endl;
+
+    cout << "Masukkan jumlah barang yang ingin dibeli (maksimal 10): ";
+    cin >> jumlahTotalBarang;
+    cout << endl;
+
+    if (jumlahTotalBarang <= 0 || jumlahTotalBarang > MAX_BARANG) {
+        cout << "Jumlah barang tidak valid!" << endl;
+        return 0;
+    }
+
+    for (int i = 0; i < jumlahTotalBarang; i++) {
+        cout << "Barang ke-" << i + 1 << endl;
+        cout << "Nama barang  : ";
+        cin.ignore();
+        getline(cin, namaBarang[i]);
+        cout << "Harga satuan : ";
+        cin >> hargaBarang[i];
+        cout << "Jumlah " << namaBarang[i] << " yang dibeli: ";
+        cin >> jumlahBarang[i];
+        cout << endl;
+    }
+
+    cout << "----------------------------------------------------------" << endl;
+    cout << "####----         Struk Mini Market Cucak Ijo         ----####" << endl;
+    cout << "----------------------------------------------------------" << endl;
+    cout << "No   Barang        Jumlah     Harga Satuan     Sub Total" << endl;
+    for (int i = 0; i < jumlahTotalBarang; i++) {
+        cout << setw(1) << i + 1 << " ";
+        cout << left << setw(12) << namaBarang[i];
+        cout << right << setw(8) << jumlahBarang[i];
+        cout << setw(16) << hargaBarang[i];
+        cout << setw(15) << jumlahBarang[i] * hargaBarang[i];
+        cout << endl;
+        totalHarga += jumlahBarang[i] * hargaBarang[i];
+    }
+    cout << "----------------------------------------------------------" << endl;
+
+    cout << "Total harga : Rp." << totalHarga << endl << endl;
+
+    cout << "Jumlah Bayar: Rp.";
+    cin >> jumlahBayar;
+    cout << endl;
+
+    while (jumlahBayar < totalHarga) {
+        cout << "Maaf, uang anda kurang. Mohon lakukan ulang pembayaran" << endl;
+        cout << "Jumlah Bayar: Rp.";
+        cin >> jumlahBayar;
+        cout << endl;
+    }
+
+    cout << "Kembalian   : Rp." << jumlahBayar - totalHarga << endl;
+    cout << endl;
+    cout << "----------------------------------------------------------" << endl;
+    cout << "####   Terimakasih sudah berbelanja, datang kembali   ####" << endl;
+    cout << "----------------------------------------------------------" << endl;
+
+    // Simpan data ke dalam file CSV dalam mode append
+    ofstream file("hasil_transaksi.csv", ios::app);
+
+    // Jika file baru dibuat, tambahkan header
+    if (file.tellp() == 0) {
+        file << "No,Barang,Jumlah,Harga Satuan,Sub Total,Total Harga,Jumlah Bayar,Kembalian\n";
+    }
+
+    for (int i = 0; i < jumlahTotalBarang; i++) {
+        file << i + 1 << "," << namaBarang[i] << "," << jumlahBarang[i] << "," << hargaBarang[i] << "," << jumlahBarang[i] * hargaBarang[i] << "," << totalHarga << "," << jumlahBayar << "," << jumlahBayar - totalHarga << "\n";
+    }
+    file.close();
+
+    cout << "Data transaksi telah disimpan ke dalam file hasil_transaksi.csv" << endl;
+
+    return 0;
+}
